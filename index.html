@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>New Year Surprise 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        height: 100vh;
+        overflow: hidden;
+        background: radial-gradient(circle, #1a002b, #000);
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .btn {
+        padding: 15px 35px;
+        font-size: 18px;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(45deg, #ff4e50, #f9d423);
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        transition: transform 0.3s;
+    }
+
+    .btn:hover {
+        transform: scale(1.1);
+    }
+
+    .card {
+        display: none;
+        background: rgba(255, 255, 255, 0.95);
+        color: #333;
+        padding: 40px;
+        border-radius: 25px;
+        max-width: 650px;
+        margin-top: 30px;
+        animation: fadeIn 1.5s ease;
+    }
+
+    h1 {
+        font-family: 'Great Vibes', cursive;
+        font-size: 46px;
+        color: #e91e63;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 18px;
+        line-height: 1.7;
+        margin: 12px 0;
+    }
+
+    .footer {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #d81b60;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.7); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Hearts */
+    .heart {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: red;
+        transform: rotate(45deg);
+        animation: float 6s linear infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+        content: '';
+        width: 20px;
+        height: 20px;
+        background: red;
+        border-radius: 50%;
+        position: absolute;
+    }
+
+    .heart::before {
+        top: -10px;
+        left: 0;
+    }
+
+    .heart::after {
+        left: -10px;
+        top: 0;
+    }
+
+    @keyframes float {
+        from {
+            transform: translateY(100vh) rotate(45deg);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(-10vh) rotate(45deg);
+            opacity: 0;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+    <button class="btn" onclick="startSurprise()">🎆 Click for New Year Surprise 🎆</button>
+
+    <div class="card" id="card">
+        <h1 id="title"></h1>
+        <p id="line1"></p>
+        <p id="line2"></p>
+        <p id="line3"></p>
+        <p id="line4"></p>
+        <div class="footer" id="footer"></div>
+    </div>
+</div>
+
+<script>
+    const messages = [
+        "Happy New Year, My Dear Sister 💖",
+        "This is to the girl who i love the most — you are my strength, my happiness, and my greatest blessing.",
+        "Thank you for your love, care, and endless support in my life.",
+        "No matter where life takes us, our bond will remain strong forever — a bond that will last a lifetime.",
+        "With all my love 💕 — Your Brother"
+    ];
+
+    function typeText(element, text, speed = 40) {
+        let i = 0;
+        const interval = setInterval(() => {
+            element.innerHTML += text.charAt(i);
+            i++;
+            if (i === text.length) clearInterval(interval);
+        }, speed);
+    }
+
+    function startSurprise() {
+        document.querySelector(".card").style.display = "block";
+
+        const elements = [
+            document.getElementById("title"),
+            document.getElementById("line1"),
+            document.getElementById("line2"),
+            document.getElementById("line3"),
+            document.getElementById("footer")
+        ];
+
+        let delay = 0;
+        elements.forEach((el, index) => {
+            setTimeout(() => {
+                typeText(el, messages[index]);
+            }, delay);
+            delay += 2000;
+        });
+
+        // Hearts
+        for (let i = 0; i < 30; i++) {
+            let heart = document.createElement("div");
+            heart.className = "heart";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+        }
+    }
+
+    // Fireworks animation
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let fireworks = [];
+
+    function Firework() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.radius = 2;
+        this.color = `hsl(${Math.random() * 360},100%,60%)`;
+        this.speed = Math.random() * 3 + 2;
+        this.exploded = false;
+        this.particles = [];
+    }
+
+    Firework.prototype.update = function () {
+        if (!this.exploded) {
+            this.y -= this.speed;
+            if (this.y < canvas.height / 2) {
+                this.exploded = true;
+                for (let i = 0; i < 30; i++) {
+                    this.particles.push({
+                        x: this.x,
+                        y: this.y,
+                        dx: (Math.random() - 0.5) * 6,
+                        dy: (Math.random() - 0.5) * 6,
+                        life: 50
+                    });
+                }
+            }
+        } else {
+            this.particles.forEach(p => {
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life--;
+            });
+        }
+    };
+
+    Firework.prototype.draw = function () {
+        if (!this.exploded) {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            this.particles.forEach(p => {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(p.x, p.y, 3, 3);
+            });
+        }
+    };
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (Math.random() < 0.05) fireworks.push(new Firework());
+        fireworks.forEach((f, i) => {
+            f.update();
+            f.draw();
+            if (f.exploded && f.particles.every(p => p.life <= 0)) {
+                fireworks.splice(i, 1);
+            }
+        });
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>
